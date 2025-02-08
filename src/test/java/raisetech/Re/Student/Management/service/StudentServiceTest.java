@@ -1,5 +1,6 @@
 package raisetech.Re.Student.Management.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
@@ -14,7 +15,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import raisetech.Re.Student.Management.controller.StudentConverter;
 import raisetech.Re.Student.Management.data.Student;
@@ -32,6 +35,7 @@ class StudentServiceTest {
   @Mock
   private StudentConverter converter;
 
+  @InjectMocks
   private StudentService sut;
 
   @BeforeEach
@@ -44,23 +48,29 @@ class StudentServiceTest {
 
     List<Student> studentList = new ArrayList<>();
     List<StudentCourse> studentCourseList = new ArrayList<>();
+    List<StudentDetail> expectedDetails = new ArrayList<>();
 
     when(repository.search()).thenReturn(studentList);
     when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
+    when(converter.convertStudentDetails(studentList, studentCourseList)).thenReturn(expectedDetails);
 
-    sut.searchStudentList();
+    List<StudentDetail> actualDetails = sut.searchStudentList();
 
     verify(repository,times(1)).search();
     verify(repository,times(1)).searchStudentCourseList();
     verify(converter,times(1)).convertStudentDetails(studentList, studentCourseList);
+
+    assertThat(actualDetails).isEqualTo(expectedDetails);
   }
 
   @Test
   void 受講生詳細検索の処理が適切に呼び出せていること() {
 
     String id = "123";
-    Student student = new Student();
-    student.setId(id);
+    Student student = new Student(id, "山田 太郎", "やまだ たろう", "たろちゃん",
+        "yamada@example.com", "東京", 25, "男性",
+        "特になし", false);
+
     when(repository.searchStudent(id)).thenReturn(student);
     when(repository.searchStudentCourse(id)).thenReturn(new ArrayList<>());
 
@@ -71,6 +81,7 @@ class StudentServiceTest {
     verify(repository,times(1)).searchStudent(id);
     verify(repository,times(1)).searchStudentCourse(id);
     Assertions.assertEquals(result.getStudent().getId(), actual.getStudent().getId());
+    Assertions.assertTrue(actual.getStudentCourseList().isEmpty());
   }
 
   @Test
@@ -101,13 +112,5 @@ class StudentServiceTest {
 
     verify(repository, times(1)).updateStudent(student);
     verify(repository, times(0)).updateStudentCourse(any(StudentCourse.class));
+   }
   }
-
-  }
-
-
-
-
-
-
-
