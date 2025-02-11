@@ -5,8 +5,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Schema(description = "受講生")
 @Getter
 @Setter
@@ -39,8 +41,6 @@ public class Student {
 
   private String remark;
   private boolean isDeleted;
-
-  public Student() {}
 
   public Student(String id, String name, String kanaName, String nickname, String email,
       String area, int age, String sex, String remark, boolean isDeleted) {
