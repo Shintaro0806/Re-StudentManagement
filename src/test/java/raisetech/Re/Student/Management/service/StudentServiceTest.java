@@ -81,7 +81,7 @@ class StudentServiceTest {
 
     verify(repository, times(1)).searchStudent(id);
     verify(repository, times(1)).searchStudentCourse(id);
-    Assertions.assertEquals(expected.getStudent().getId(), actual.getStudent().getId());
+    Assertions.assertEquals(expected,actual);
     Assertions.assertTrue(actual.getStudentCourseList().isEmpty());
   }
 
@@ -105,7 +105,6 @@ class StudentServiceTest {
 
   @Test
   void 受講生詳細の更新処理をリポジトリーから適切に呼び出せていること() {
-
 
     String id = "123";
     Student student = new Student(id,"江波公史", "エナミコウジ", "エナミ",
