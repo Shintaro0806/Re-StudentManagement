@@ -67,27 +67,31 @@ class StudentServiceTest {
   void 受講生詳細検索の処理が適切に呼び出せていること() {
 
     String id = "123";
-    Student student = new Student(id, "山田 太郎", "やまだ たろう", "たろちゃん",
-        "yamada@example.com", "東京", 25, "男性",
-        "特になし", false);
+    Student student = new Student(id, "江波公史", "エナミコウジ", "エナミ",
+        "test@example.com", "奈良県", 0, "男性", "", false);
+
+    List<StudentCourse> courseList = new ArrayList<>();
 
     when(repository.searchStudent(id)).thenReturn(student);
-    when(repository.searchStudentCourse(id)).thenReturn(new ArrayList<>());
+    when(repository.searchStudentCourse(id)).thenReturn(courseList);
 
-    StudentDetail result = new StudentDetail(student, new ArrayList<>());
+    StudentDetail expected = new StudentDetail(student, courseList);
 
     StudentDetail actual = sut.searchStudent(id);
 
-    verify(repository,times(1)).searchStudent(id);
-    verify(repository,times(1)).searchStudentCourse(id);
-    Assertions.assertEquals(result.getStudent().getId(), actual.getStudent().getId());
+    verify(repository, times(1)).searchStudent(id);
+    verify(repository, times(1)).searchStudentCourse(id);
+    Assertions.assertEquals(expected.getStudent().getId(), actual.getStudent().getId());
     Assertions.assertTrue(actual.getStudentCourseList().isEmpty());
   }
 
   @Test
   void 受講生詳細の登録処理がリポジトリーから適切に呼び出せていること() {
 
-    Student student = new Student();
+    String id = "123";
+    Student student = new Student(id,"江波公史", "エナミコウジ", "エナミ",
+        "test@example.com", "奈良県", 0, "男性", "", false);
+
     StudentDetail studentDetail = new StudentDetail();
     studentDetail.setStudent(student);
     List<StudentCourse> studentCourseList = new ArrayList<>();
@@ -102,7 +106,11 @@ class StudentServiceTest {
   @Test
   void 受講生詳細の更新処理をリポジトリーから適切に呼び出せていること() {
 
-    Student student = new Student();
+
+    String id = "123";
+    Student student = new Student(id,"江波公史", "エナミコウジ", "エナミ",
+        "test@example.com", "奈良県", 0, "男性", "", false);
+
     StudentDetail studentDetail = new StudentDetail();
     studentDetail.setStudent(student);
     List<StudentCourse> studentCourseList = new ArrayList<>();
