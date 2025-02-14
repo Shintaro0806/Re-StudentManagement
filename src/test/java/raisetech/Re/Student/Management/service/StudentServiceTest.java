@@ -2,14 +2,11 @@ package raisetech.Re.Student.Management.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.util.AssertionErrors.assertEquals;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,14 +14,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import raisetech.Re.Student.Management.controller.StudentConverter;
 import raisetech.Re.Student.Management.data.Student;
 import raisetech.Re.Student.Management.data.StudentCourse;
 import raisetech.Re.Student.Management.domain.StudentDetail;
 import raisetech.Re.Student.Management.repository.StudentRepository;
-import raisetech.Re.Student.Management.service.StudentService;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
