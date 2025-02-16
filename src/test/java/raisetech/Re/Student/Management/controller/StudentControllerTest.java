@@ -4,13 +4,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +26,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import raisetech.Re.Student.Management.data.Student;
+import raisetech.Re.Student.Management.domain.StudentDetail;
 import raisetech.Re.Student.Management.service.Application;
 import raisetech.Re.Student.Management.service.StudentService;
 
@@ -36,8 +42,13 @@ class StudentControllerTest {
 
   private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
+  private Student student;
+  private StudentDetail studentDetail;
+
   @Test
   void 受講生詳細の一覧検索が実行できて空のリストが返ってくること() throws Exception {
+    when(service.searchStudentList()).thenReturn(Collections.emptyList());
+
     mockMvc.perform(get("/studentList"))
         .andExpect(status().isOk())
         .andExpect(content().json("[]"));
@@ -70,6 +81,9 @@ class StudentControllerTest {
   @Test
   void IDに紐づく任意の受講生詳細の情報を検索して空のリストが返ってくること() throws Exception{
     String id = "123";
+    when(service.searchStudent(any(String.class))).thenReturn(null);
+
+
     mockMvc.perform(get("/student/{id}",id))
         .andExpect(status().isOk());
 
@@ -78,6 +92,10 @@ class StudentControllerTest {
 
   @Test
   void 受講生登録をすると詳細情報が返ってくること()  throws Exception{
+    StudentDetail studentDetail = new StudentDetail();
+    Student student = new Student();
+    student.setName("大野 林太郎");
+    studentDetail.setStudent(student);
     String requestBody = """
         {
             "student": {
@@ -98,8 +116,13 @@ class StudentControllerTest {
             ]
         }
         """;
+
+    when(service.registerStudent(any())).thenReturn(studentDetail);
+
     mockMvc.perform(MockMvcRequestBuilders.post("/registerStudent")
-        .contentType(MediaType.APPLICATION_JSON).content(requestBody)).andExpect(status().isOk());
+        .contentType(MediaType.APPLICATION_JSON).content(requestBody))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.student.name").value("大野 林太郎"));
 
     verify(service,times(1)).registerStudent(any());
   }
@@ -132,13 +155,16 @@ class StudentControllerTest {
     mockMvc.perform(MockMvcRequestBuilders.put("/updateStudent")
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody))
-        .andExpect(status().isOk());
+        .andExpect(status().isOk())
+        .andExpect(content().string("更新処理が成功しました。"));
 
     verify(service, times(1)).updateStudent(any());
   }
 
   @Test
   public void 例外をスローしてエラー処理が上手くいくこと() throws Exception {
+    when(service.searchStudent(any())).thenThrow(new RuntimeException("このAPIは現在利用できません。古いURLとなっています"));
+
     mockMvc.perform(get("/exception"))
         .andExpect(status().is4xxClientError())
         .andExpect(content().string("このAPIは現在利用できません。古いURLとなっています"));
