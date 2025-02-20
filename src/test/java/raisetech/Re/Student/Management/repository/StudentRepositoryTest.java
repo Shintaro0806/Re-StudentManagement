@@ -29,17 +29,13 @@ class StudentRepositoryTest {
 
   @Test
   void 受講生をIDで検索ができること() {
+    Student expected = new Student(
+        "1", "山田太郎", "ヤマダタロウ", "タロ", "taro@example.com",
+        "東京", 25, "男性", "", false);
+
     Student actual = sut.searchStudent("1");
 
-    assertThat(actual).isNotNull();
-    assertThat(actual.getId()).isEqualTo("1");
-    assertThat(actual.getName()).isEqualTo("山田太郎");
-    assertThat(actual.getKanaName()).isEqualTo("ヤマダタロウ");
-    assertThat(actual.getNickname()).isEqualTo("タロ");
-    assertThat(actual.getEmail()).isEqualTo("taro@example.com");
-    assertThat(actual.getArea()).isEqualTo("東京");
-    assertThat(actual.getAge()).isEqualTo(25);
-    assertThat(actual.getSex()).isEqualTo("男性");
+    assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
   }
 
   @Test
