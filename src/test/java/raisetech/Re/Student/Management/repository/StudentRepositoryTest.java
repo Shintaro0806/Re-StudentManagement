@@ -53,37 +53,27 @@ class StudentRepositoryTest {
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
-    StudentCourse firstCourse = actual.get(0);
-    assertThat(firstCourse.getStudentId()).isEqualTo("1");
-    assertThat(firstCourse.getCourseName()).isEqualTo("Javaコース");
-    assertThat(firstCourse.getCourseStartAt().format(formatter)).isEqualTo("2023-04-01T09:00:00");
-    assertThat(firstCourse.getCourseEndAt().format(formatter)).isEqualTo("2023-07-01T15:00:00");
+    List<StudentCourse> expected = List.of(
+        new StudentCourse("1", "1", "Javaコース",
+            LocalDateTime.parse("2023-04-01T09:00:00"),
+            LocalDateTime.parse("2023-07-01T15:00:00")),
 
-    StudentCourse secondCourse = actual.get(1);
-    assertThat(secondCourse.getStudentId()).isEqualTo("1");
-    assertThat(secondCourse.getCourseName()).isEqualTo("AWSコース");
-    assertThat(secondCourse.getCourseStartAt().format(formatter)).isEqualTo("2023-05-01T10:00:00");
-    assertThat(secondCourse.getCourseEndAt().format(formatter)).isEqualTo("2023-08-01T16:00:00");
+        new StudentCourse("2", "1", "AWSコース",
+            LocalDateTime.parse("2023-05-01T10:00:00"),
+            LocalDateTime.parse("2023-08-01T16:00:00")),
 
-    StudentCourse thirdCourse = actual.get(2);
-    assertThat(thirdCourse.getStudentId()).isEqualTo("1");
-    assertThat(thirdCourse.getCourseName()).isEqualTo("Web制作コース");
-    assertThat(thirdCourse.getCourseStartAt().format(formatter)).isEqualTo("2024-01-01T13:00:00");
-    assertThat(thirdCourse.getCourseEndAt().format(formatter)).isEqualTo("2024-05-01T19:00:00");
+        new StudentCourse("10", "1", "Web制作コース",
+            LocalDateTime.parse("2024-01-01T13:00:00"),
+            LocalDateTime.parse("2024-05-01T19:00:00")));
+
+    assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
   }
 
   @Test
   void 受講生の登録が行えること() {
-    Student student = new Student();
-    student.setName("江波浩二");
-    student.setKanaName("エナミコウジ");
-    student.setNickname("エナミ");
-    student.setEmail("test@example.com");
-    student.setArea("奈良県");
-    student.setAge(36);
-    student.setSex("男性");
-    student.setRemark("");
-    student.setDeleted(false);
+    Student student = new Student(
+        "1", "山田太郎", "ヤマダタロウ", "タロ", "taro@example.com",
+        "東京", 25, "男性", "", false);
 
     sut.registerStudent(student);
 
@@ -112,8 +102,8 @@ class StudentRepositoryTest {
 
     sut.updateStudent(actual);
 
-    actual = sut.searchStudent("1");
-    assertThat(actual.getRemark()).isEqualTo("更新しました。");
+    Student updateactual = sut.searchStudent("1");
+    assertThat(updateactual.getRemark()).isEqualTo("更新しました。");
   }
 
   @Test
@@ -124,8 +114,8 @@ class StudentRepositoryTest {
 
     sut.updateStudentCourse(studentCourse1);
 
-    actual = sut.searchStudentCourse("1");
-    studentCourse1 = actual.get(0);
-    assertThat(studentCourse1.getCourseName()).isEqualTo("Javaアドバンスコース");
+    List<StudentCourse> updateactual = sut.searchStudentCourse("1");
+    StudentCourse updatestudentCourse1 = updateactual.get(0);
+    assertThat(updatestudentCourse1.getCourseName()).isEqualTo("Javaアドバンスコース");
   }
 }
