@@ -82,12 +82,11 @@ class StudentRepositoryTest {
   }
 
   @Test
-  void 受講生コース情報の登録が行えること() {
-    StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setStudentId("2");
-    studentCourse.setCourseName("Spring Bootコース");
-    studentCourse.setCourseStartAt(LocalDateTime.now());
-    studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));
+  void 受講生コース情報の登録が行えること() {StudentCourse studentCourse = new StudentCourse(
+      "1","2",
+      "Spring Bootコース",
+        LocalDateTime.now(),
+        LocalDateTime.now().plusYears(1));
 
     sut.registerStudentCourse(studentCourse);
 

@@ -5,11 +5,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "受講生コース情報")
 @Getter
 @Setter
@@ -26,15 +28,6 @@ public class StudentCourse {
 
   private LocalDateTime courseStartAt;
   private LocalDateTime courseEndAt;
-
-  public StudentCourse(String id, String studentId, String courseName,
-      LocalDateTime courseStartAt, LocalDateTime courseEndAt) {
-    this.id = id;
-    this.studentId = studentId;
-    this.courseName = courseName;
-    this.courseStartAt = courseStartAt;
-    this.courseEndAt = courseEndAt;
-  }
 
   @Override
   public boolean equals(Object o) {
