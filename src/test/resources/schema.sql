@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS students
     email VARCHAR(50) NOT NULL,
     area VARCHAR(50),
     age INT,
-    sex VARCHAR(10)
+    sex VARCHAR(10),
     remark TEXT,
     is_deleted boolean
 );
