@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import raisetech.Re.Student.Management.data.CourseStatus;
 import raisetech.Re.Student.Management.domain.StudentDetail;
 import raisetech.Re.Student.Management.service.StudentService;
 
@@ -55,6 +57,36 @@ public class StudentController {
   public StudentDetail getStudent(
       @PathVariable @NotBlank @Pattern(regexp = "^\\d+$") String id) {
     return service.searchStudent(id);
+  }
+
+  /**
+   *  コースの申込状況をコースIDを用いて取得します。
+   *
+   * @param courseId
+   * @return　コース申込状況
+   */
+  @Operation(summary = "コース申込状況", description = "コースIDでコース申込状況を取得します。")
+  @GetMapping("/coursestatus/{courseId}")
+  public CourseStatus courseStatus(@PathVariable int courseId){
+    return service.searchCourseStatus(courseId);
+  }
+
+  /**
+   * 受講生詳細をid,名前,性別,コース名で検索します。また、複数の項目のand条件で検索可能です。
+   *
+   * @param id
+   * @param name
+   * @param sex
+   * @param courseName
+   * @return　受講生詳細
+   */
+  @GetMapping("/students")
+  public List<StudentDetail> getStudents(
+      @RequestParam(required = false) String id,
+      @RequestParam(required = false) String name,
+      @RequestParam(required = false) String sex,
+      @RequestParam(required = false) String courseName) {
+    return service.searchMultiStudentList(id, name, sex, courseName);
   }
 
   /**
