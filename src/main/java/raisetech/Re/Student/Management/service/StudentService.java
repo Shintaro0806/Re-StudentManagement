@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import raisetech.Re.Student.Management.controller.StudentConverter;
+import raisetech.Re.Student.Management.data.CourseStatus;
 import raisetech.Re.Student.Management.data.Student;
 import raisetech.Re.Student.Management.data.StudentCourse;
 import raisetech.Re.Student.Management.domain.StudentDetail;
@@ -50,6 +51,17 @@ public class StudentService {
   }
 
   /**
+   * コースの申込状況をコースIDを用いて取得します。
+   *
+   * @param courseId
+   * @return　コース申込状況
+   */
+  public CourseStatus searchCourseStatus(int courseId) {
+    CourseStatus courseStatus = repository.searchCourseStatus(courseId);
+    return courseStatus;
+  }
+
+  /**
    * 受講生詳細の登録を行います。 受講生と受講生コース情報を個別に登録し、受講生コース情報には受講生情報を紐づける値とコース開始日、コース終了日を設定します。
    *
    * @param studentDetail 受講生詳細
@@ -91,5 +103,21 @@ public class StudentService {
     repository.updateStudent(studentDetail.getStudent());
     studentDetail.getStudentCourseList()
         .forEach(studentsCourse -> repository.updateStudentCourse(studentsCourse));
+  }
+
+  /**
+   * 受講生詳細をid,名前,性別,コース名で検索します。また、複数の項目のand条件で検索可能です。
+   *
+   * @param id
+   * @param name
+   * @param sex
+   * @param courseName
+   * @return　受講生詳細
+   */
+  public List<StudentDetail> searchMultiStudentList(String id, String name, String sex, String courseName) {
+    List<Student> studentList = repository.searchByCriteria(id, name, sex, courseName);
+    List<StudentCourse> studentCourseList = repository.searchStudentCourseList();
+
+    return converter.convertStudentDetails(studentList, studentCourseList);
   }
 }

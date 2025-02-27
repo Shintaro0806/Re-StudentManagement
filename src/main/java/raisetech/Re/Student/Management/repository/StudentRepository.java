@@ -4,8 +4,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import raisetech.Re.Student.Management.data.CourseStatus;
 import raisetech.Re.Student.Management.data.Student;
 import raisetech.Re.Student.Management.data.StudentCourse;
 
@@ -50,6 +52,15 @@ public interface StudentRepository {
   List<StudentCourse> searchStudentCourse(String studentId);
 
   /**
+   * コースの申し込み状況を、コースIDを用いて検索します。
+   *
+   * @param courseId
+   * @return　コース申込状況
+   */
+  @Select("SELECT * FROM course_status WHERE course_id  = #{courseId}")
+  CourseStatus searchCourseStatus(int courseId);
+
+  /**
    * 受講生を新規登録します。 IDに関しては自動採番を行う。
    *
    * @param student 受講生
@@ -86,4 +97,26 @@ public interface StudentRepository {
    */
   @Update("UPDATE students_courses SET course_name =#{courseName} WHERE id= #{id}")
   void updateStudentCourse(StudentCourse studentCourse);
+
+  /**
+   * 受講生情報を複数の条件で検索します。
+   *
+   * @param id
+   * @param name
+   * @param sex
+   * @param courseName
+   * @return　受講生詳細
+   */
+  @Select("<script>" +
+      "SELECT DISTINCT s.* " +
+      "FROM students s " +
+      "JOIN students_courses sc ON s.id = sc.student_id " +
+      "WHERE 1=1 " +
+      "<if test='id != null and id != \"\"'>AND s.id = #{id} </if>" +
+      "<if test='name != null and name != \"\"'>AND s.name = #{name} </if>" +
+      "<if test='sex != null and sex != \"\"'>AND s.sex = #{sex} </if>" +
+      "<if test='courseName != null and courseName != \"\"'>AND sc.course_name = #{courseName} </if>" +
+      "</script>")
+  List<Student> searchByCriteria(@Param("id") String id, @Param("name") String name,
+      @Param("sex") String sex, @Param("courseName") String courseName);
 }
