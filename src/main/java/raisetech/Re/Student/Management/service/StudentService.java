@@ -106,16 +106,17 @@ public class StudentService {
   }
 
   /**
-   * 受講生詳細をid,名前,性別,コース名で検索します。また、複数の項目のand条件で検索可能です。
+   * 受講生詳細をid,名前,性別,コース名,コースIDで検索します。また、複数の項目のand条件で検索可能です。
    *
    * @param id
    * @param name
    * @param sex
    * @param courseName
+   * @param courseId
    * @return　受講生詳細
    */
-  public List<StudentDetail> searchMultiStudentList(String id, String name, String sex, String courseName) {
-    List<Student> studentList = repository.searchByCriteria(id, name, sex, courseName);
+  public List<StudentDetail> searchMultiStudentList(String id, String name, String sex, String courseName,String courseId) {
+    List<Student> studentList = repository.searchByCriteria(id, name, sex, courseName,courseId);
     List<StudentCourse> studentCourseList = repository.searchStudentCourseList();
 
     return converter.convertStudentDetails(studentList, studentCourseList);

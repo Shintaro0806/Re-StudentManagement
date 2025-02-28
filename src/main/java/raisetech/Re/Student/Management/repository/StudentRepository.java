@@ -48,7 +48,7 @@ public interface StudentRepository {
    * @param studentId 受講生ID
    * @return 受講生IDに紐づく受講生コース情報
    */
-  @Select("SELECT * FROM students_courses WHERE student_id = #{studentId}")
+  @Select("SELECT * FROM students_courses WHERE id = #{studentId}")
   List<StudentCourse> searchStudentCourse(String studentId);
 
   /**
@@ -105,6 +105,7 @@ public interface StudentRepository {
    * @param name
    * @param sex
    * @param courseName
+   * @param courseId
    * @return　受講生詳細
    */
   @Select("<script>" +
@@ -115,8 +116,13 @@ public interface StudentRepository {
       "<if test='id != null and id != \"\"'>AND s.id = #{id} </if>" +
       "<if test='name != null and name != \"\"'>AND s.name = #{name} </if>" +
       "<if test='sex != null and sex != \"\"'>AND s.sex = #{sex} </if>" +
-      "<if test='courseName != null and courseName != \"\"'>AND sc.course_name = #{courseName} </if>" +
+      "<if test='courseName != null and courseName != \"\"'>AND sc.course_name = #{courseName} </if>"
+      +
+      "<if test='courseId != null and courseId != \"\"'>AND sc.course_id = #{courseId} </if>" +
       "</script>")
-  List<Student> searchByCriteria(@Param("id") String id, @Param("name") String name,
-      @Param("sex") String sex, @Param("courseName") String courseName);
+  List<Student> searchByCriteria(@Param("id") String id,
+      @Param("name") String name,
+      @Param("sex") String sex,
+      @Param("courseName") String courseName,
+      @Param("courseId") String courseId);
 }

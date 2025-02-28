@@ -99,6 +99,7 @@ class StudentServiceTest {
     String name = "山田太郎";
     String sex = "男性";
     String courseName = "Javaコース";
+    String courseId =  "1";
 
     Student student = new Student("1", "山田太郎", "ヤマダタロウ", "タロ", "taro@example.com", "東京", 25, "男性", "", false);
     List<Student> studentList = List.of(student);
@@ -109,15 +110,15 @@ class StudentServiceTest {
     StudentDetail studentDetail = new StudentDetail(student,studentCourseList);
     List<StudentDetail> expected = List.of(studentDetail);
 
-    when(repository.searchByCriteria(id, name, sex, courseName)).thenReturn(studentList);
+    when(repository.searchByCriteria(id, name, sex, courseName,courseId)).thenReturn(studentList);
     when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
     when(converter.convertStudentDetails(studentList, studentCourseList)).thenReturn(expected);
 
-    List<StudentDetail> actual = sut.searchMultiStudentList(id, name, sex, courseName);
+    List<StudentDetail> actual = sut.searchMultiStudentList(id, name, sex, courseName,courseId);
 
     assertThat(actual).isEqualTo(expected);
 
-    verify(repository,times(1)).searchByCriteria(id,name,sex,courseName);
+    verify(repository,times(1)).searchByCriteria(id,name,sex,courseName,courseId);
   }
 
   @Test

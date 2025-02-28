@@ -95,7 +95,7 @@ class StudentControllerTest {
 
     when(service.searchCourseStatus(courseId)).thenReturn(courseStatus);
 
-    mockMvc.perform(get("/coursestatus/{courseId}",courseId))
+    mockMvc.perform(get("/courseStatus/{courseId}",courseId))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.courseId").value(courseId))
@@ -110,7 +110,8 @@ class StudentControllerTest {
     String name = "山田太郎";
     String sex = "男性";
     String courseName = "Javaコース";
-    when(service.searchMultiStudentList(id,name,sex,courseName)).thenReturn(null);
+    String courseId = "1";
+    when(service.searchMultiStudentList(id,name,sex,courseName,courseId)).thenReturn(null);
 
     mockMvc.perform(get("/students")
             .param("id", id)
@@ -119,7 +120,7 @@ class StudentControllerTest {
             .param("courseName", courseName))
             .andExpect(status().isOk());
 
-    verify(service,times(1)).searchMultiStudentList(id,name,sex,courseName);
+    verify(service,times(1)).searchMultiStudentList(id,name,sex,courseName,courseId);
   }
 
   @Test

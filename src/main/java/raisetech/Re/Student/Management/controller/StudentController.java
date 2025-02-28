@@ -85,8 +85,9 @@ public class StudentController {
       @RequestParam(required = false) String id,
       @RequestParam(required = false) String name,
       @RequestParam(required = false) String sex,
-      @RequestParam(required = false) String courseName) {
-    return service.searchMultiStudentList(id, name, sex, courseName);
+      @RequestParam(required = false) String courseName,
+      @RequestParam(required = false) String courseId) {
+    return service.searchMultiStudentList(id, name, sex, courseName,courseId);
   }
 
   /**
