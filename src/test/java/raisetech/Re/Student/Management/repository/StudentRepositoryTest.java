@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import raisetech.Re.Student.Management.data.CourseStatus;
 import raisetech.Re.Student.Management.data.Student;
 import raisetech.Re.Student.Management.data.StudentCourse;
 import raisetech.Re.Student.Management.service.Application;
@@ -70,6 +71,30 @@ class StudentRepositoryTest {
   }
 
   @Test
+  void コース申込状況をコースIDで検索できること() {
+    CourseStatus actual = sut.searchCourseStatus(1);
+
+    assertThat(actual.getStatus()).isEqualTo("仮申込");
+  }
+
+  @Test
+  void 受講生詳細を条件付きで検索できること() {
+    String id = "1";
+    String name = "山田太郎";
+    String sex = "男性";
+    String courseName = "Javaコース";
+
+    Student student = new Student(
+        "1", "山田太郎", "ヤマダタロウ", "タロ", "taro@example.com",
+        "東京", 25, "男性", "", false);
+    List<Student> expected = List.of(student);
+
+    List<Student> actualList = sut.searchByCriteria(id,name,sex,courseName);
+
+    assertThat(actualList).isEqualTo(expected);
+  }
+
+  @Test
   void 受講生の登録が行えること() {
     Student student = new Student(
         "1", "山田太郎", "ヤマダタロウ", "タロ", "taro@example.com",
@@ -82,7 +107,8 @@ class StudentRepositoryTest {
   }
 
   @Test
-  void 受講生コース情報の登録が行えること() {StudentCourse studentCourse = new StudentCourse(
+  void 受講生コース情報の登録が行えること() {
+    StudentCourse studentCourse = new StudentCourse(
       "1","2",
       "Spring Bootコース",
         LocalDateTime.now(),
