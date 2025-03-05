@@ -104,6 +104,13 @@ public class StudentController {
     return ResponseEntity.ok(responseStudentDetail);
   }
 
+  @PostMapping("/registerCourseStatus")
+  public ResponseEntity<CourseStatus> registerCourseStatus(
+      @RequestBody int courseId) {
+    CourseStatus responseCourseStatus = service.registerCourseStatus(courseId);
+    return ResponseEntity.ok(responseCourseStatus);
+  }
+
   /**
    * 受講生詳細の更新を行います。 キャンセルフラグの更新もここで行います（論理削除）
    *

@@ -82,6 +82,16 @@ public interface StudentRepository {
   void registerStudentCourse(StudentCourse studentCourse);
 
   /**
+   * コース申込状況を新規登録します。status_key_idに関しては自動採番を行う。
+   *
+   * @param courseStatus コース申込状況
+   */
+  @Insert("INSERT INTO course_status(status_id, status, course_id) "
+      + "VALUES(1, '仮申込', #{course_id})")
+  @Options(useGeneratedKeys = true, keyProperty = "status_key_id")
+  void registerCourseStatus(CourseStatus courseStatus);
+
+  /**
    * 受講生を更新します。
    *
    * @param student 受講生
@@ -97,6 +107,13 @@ public interface StudentRepository {
    */
   @Update("UPDATE students_courses SET course_name =#{courseName} WHERE id= #{id}")
   void updateStudentCourse(StudentCourse studentCourse);
+
+  /**
+   * コース申込状況を更新します。
+   * @param courseStatus　コース申込状況
+   */
+  @Update("UPDATE course_status SET status_id =#{statusId}, status=#{status} WHERE course_id= #{courseId}")
+  void updateCourseStatus(CourseStatus courseStatus);
 
   /**
    * 受講生情報を複数の条件で検索します。

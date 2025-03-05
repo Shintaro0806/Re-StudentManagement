@@ -1,6 +1,7 @@
 package raisetech.Re.Student.Management.data;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +20,9 @@ public class CourseStatus {
   @NotBlank
   private String status;
 
-  @Pattern(regexp = "^\\d+$")
+  @NotNull
   private int courseId;
+
+  @Pattern(regexp = "^\\d+$")
+  private int statusKeyId;
 }

@@ -74,9 +74,21 @@ public class StudentService {
     repository.registerStudent(student);
     studentDetail.getStudentCourseList().forEach(studentsCourse -> {
       initStudentsCourse(studentsCourse, student);
+
       repository.registerStudentCourse(studentsCourse);
     });
     return studentDetail;
+  }
+
+  @Transactional
+  public CourseStatus registerCourseStatus(int courseId) {
+    CourseStatus courseStatus = new CourseStatus();
+    courseStatus.setStatusId(1);
+    courseStatus.setStatus("仮申込");
+    courseStatus.setCourseId(courseId);
+    repository.registerCourseStatus(courseStatus);
+
+    return courseStatus;
   }
 
   /**
