@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 public class CourseStatus {
 
-  @Pattern(regexp = "^\\d+$")
+  @NotNull
   private int statusId;
 
   @NotBlank
@@ -23,6 +23,6 @@ public class CourseStatus {
   @NotNull
   private int courseId;
 
-  @Pattern(regexp = "^\\d+$")
+  @NotNull
   private int statusKeyId;
 }

@@ -124,6 +124,12 @@ public class StudentController {
     return ResponseEntity.ok("更新処理が成功しました。");
   }
 
+  @PutMapping("/updateCourseStatus")
+  public ResponseEntity<String> updateCourseStatus(@RequestBody @Valid CourseStatus courseStatus) {
+    service.updateCourseStatus(courseStatus);
+    return ResponseEntity.ok("更新処理が成功しました。");
+  }
+
   @Operation(summary = "エラー発生のテスト", description = "例外をスローしてエラー処理をテストするエンドポイントです。")
   @GetMapping("/exception")
   public ResponseEntity<String> throwException() throws NotFoundException {

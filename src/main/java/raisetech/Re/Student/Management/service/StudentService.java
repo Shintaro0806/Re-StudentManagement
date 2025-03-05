@@ -117,6 +117,11 @@ public class StudentService {
         .forEach(studentsCourse -> repository.updateStudentCourse(studentsCourse));
   }
 
+  @Transactional
+  public void updateCourseStatus(CourseStatus courseStatus) {
+    repository.updateCourseStatus(courseStatus);
+  }
+
   /**
    * 受講生詳細をid,名前,性別,コース名,コースIDで検索します。また、複数の項目のand条件で検索可能です。
    *
