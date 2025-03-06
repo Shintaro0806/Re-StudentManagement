@@ -83,7 +83,7 @@ class StudentServiceTest {
   @Test
   void 受講生コース申込状況検索の処理が適切に呼び出せていること() {
     int courseId = 123;
-    CourseStatus courseStatus = new CourseStatus(123, "仮申込", courseId);
+    CourseStatus courseStatus = new CourseStatus(123, "仮申込", courseId,1);
 
     when(repository.searchCourseStatus(courseId)).thenReturn(courseStatus);
 
@@ -154,4 +154,17 @@ class StudentServiceTest {
     verify(repository, times(1)).updateStudent(student);
     verify(repository, times(0)).updateStudentCourse(any(StudentCourse.class));
    }
+
+   @Test
+  void コース申込状況更新処理をリポジトリーから呼び出せていること() {
+    int testCourseId = 100;
+    int testId = 100;
+    CourseStatus courseStatus = new CourseStatus(1,"仮申込",testCourseId,testId);
+    courseStatus.setStatusId(2);
+    courseStatus.setStatus("本申込");
+
+    sut.updateCourseStatus(courseStatus);
+
+    verify(repository, times(1)).updateCourseStatus(courseStatus);
+  }
   }

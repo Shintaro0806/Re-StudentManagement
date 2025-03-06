@@ -88,7 +88,7 @@ public interface StudentRepository {
    */
   @Insert("INSERT INTO course_status(status_id, status, course_id) "
       + "VALUES(1, '仮申込', #{course_id})")
-  @Options(useGeneratedKeys = true, keyProperty = "status_key_id")
+  @Options(useGeneratedKeys = true, keyProperty = "statusKeyId")
   void registerCourseStatus(CourseStatus courseStatus);
 
   /**
@@ -110,6 +110,7 @@ public interface StudentRepository {
 
   /**
    * コース申込状況を更新します。
+   *
    * @param courseStatus　コース申込状況
    */
   @Update("UPDATE course_status SET status_id =#{statusId}, status=#{status} WHERE course_id= #{courseId}")

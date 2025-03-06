@@ -83,13 +83,14 @@ class StudentRepositoryTest {
     String name = "山田太郎";
     String sex = "男性";
     String courseName = "Javaコース";
+    String courseId = "1";
 
     Student student = new Student(
         "1", "山田太郎", "ヤマダタロウ", "タロ", "taro@example.com",
         "東京", 25, "男性", "", false);
     List<Student> expected = List.of(student);
 
-    List<Student> actualList = sut.searchByCriteria(id,name,sex,courseName);
+    List<Student> actualList = sut.searchByCriteria(id,name,sex,courseName,courseId);
 
     assertThat(actualList).isEqualTo(expected);
   }
@@ -142,5 +143,16 @@ class StudentRepositoryTest {
     List<StudentCourse> updateactual = sut.searchStudentCourse("1");
     StudentCourse updatestudentCourse1 = updateactual.get(0);
     assertThat(updatestudentCourse1.getCourseName()).isEqualTo("Javaアドバンスコース");
+  }
+
+  @Test
+  void コース申込状況の更新が行えること() {
+    CourseStatus actual = sut.searchCourseStatus(1);
+    actual.setStatus("更新しました。");
+
+    sut.updateCourseStatus(actual);
+
+    CourseStatus updateActual = sut.searchCourseStatus(1);
+    assertThat(updateActual.getStatus()).isEqualTo("更新しました。");
   }
 }

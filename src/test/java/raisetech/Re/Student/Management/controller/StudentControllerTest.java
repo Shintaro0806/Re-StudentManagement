@@ -91,7 +91,7 @@ class StudentControllerTest {
   @Test
   void コースIDに紐づく任意のコースの申込状況を取得できること() throws Exception{
     int courseId = 123;
-    CourseStatus courseStatus = new CourseStatus(4,"受講終了",courseId);
+    CourseStatus courseStatus = new CourseStatus(4,"受講終了",courseId,1);
 
     when(service.searchCourseStatus(courseId)).thenReturn(courseStatus);
 
@@ -192,6 +192,26 @@ class StudentControllerTest {
         .andExpect(content().string("更新処理が成功しました。"));
 
     verify(service, times(1)).updateStudent(any());
+  }
+
+  @Test
+  void コース申込状況を更新すると成功メッセージが返ること() throws Exception {
+    String requestBody = """
+        {
+            "courseId": 2,
+            "statusId": 4,
+            "status": "受講終了",
+            "statusKeyId": 2
+        }
+        """;
+
+    mockMvc.perform(MockMvcRequestBuilders.put("/updateCourseStatus")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(requestBody))
+        .andExpect(status().isOk())
+        .andExpect(content().string("更新処理が成功しました。"));
+
+    verify(service, times(1)).updateCourseStatus(any());
   }
 
   @Test

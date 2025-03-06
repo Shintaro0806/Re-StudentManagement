@@ -117,6 +117,11 @@ public class StudentService {
         .forEach(studentsCourse -> repository.updateStudentCourse(studentsCourse));
   }
 
+  /**
+   * コース申込状況の更新を行います。
+   *
+   * @param courseStatus　コース申込状況
+   */
   @Transactional
   public void updateCourseStatus(CourseStatus courseStatus) {
     repository.updateCourseStatus(courseStatus);

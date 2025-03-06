@@ -105,9 +105,8 @@ public class StudentController {
   }
 
   @PostMapping("/registerCourseStatus")
-  public ResponseEntity<CourseStatus> registerCourseStatus(
-      @RequestBody int courseId) {
-    CourseStatus responseCourseStatus = service.registerCourseStatus(courseId);
+  public ResponseEntity<CourseStatus> registerCourseStatus(@RequestBody CourseStatus courseStatus) {
+    CourseStatus responseCourseStatus = service.registerCourseStatus(courseStatus.getCourseId());
     return ResponseEntity.ok(responseCourseStatus);
   }
 
@@ -124,6 +123,12 @@ public class StudentController {
     return ResponseEntity.ok("更新処理が成功しました。");
   }
 
+  /**
+   * コース申込状況の更新を行います。
+   *
+   * @param courseStatus　コース申し込み状況
+   * @return 実行結果
+   */
   @PutMapping("/updateCourseStatus")
   public ResponseEntity<String> updateCourseStatus(@RequestBody @Valid CourseStatus courseStatus) {
     service.updateCourseStatus(courseStatus);
