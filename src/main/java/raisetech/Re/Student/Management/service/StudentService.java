@@ -85,7 +85,6 @@ public class StudentService {
    * @param courseId
    * @return
    */
-  @Transactional
   public CourseStatus registerCourseStatus(int courseId) {
     CourseStatus courseStatus = new CourseStatus();
     courseStatus.setStatusId(1);
@@ -127,7 +126,6 @@ public class StudentService {
    *
    * @param courseStatus　コース申込状況
    */
-  @Transactional
   public void updateCourseStatus(CourseStatus courseStatus) {
     repository.updateCourseStatus(courseStatus);
   }

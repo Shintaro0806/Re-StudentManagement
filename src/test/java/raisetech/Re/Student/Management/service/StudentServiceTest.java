@@ -166,7 +166,7 @@ class StudentServiceTest {
     verify(repository, times(0)).updateStudentCourse(any(StudentCourse.class));
    }
 
-   @Test
+  @Test
   void コース申込状況更新処理をリポジトリーから呼び出せていること() {
     int testCourseId = 100;
     int testId = 100;
