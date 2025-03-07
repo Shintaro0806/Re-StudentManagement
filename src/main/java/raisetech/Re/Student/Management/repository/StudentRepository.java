@@ -86,8 +86,9 @@ public interface StudentRepository {
    *
    * @param courseStatus コース申込状況
    */
+
   @Insert("INSERT INTO course_status(status_id, status, course_id) "
-      + "VALUES(1, '仮申込', #{course_id})")
+      + "VALUES(1, '仮申込', #{courseId})")
   @Options(useGeneratedKeys = true, keyProperty = "statusKeyId")
   void registerCourseStatus(CourseStatus courseStatus);
 

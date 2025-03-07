@@ -122,6 +122,16 @@ class StudentRepositoryTest {
   }
 
   @Test
+  void コース申込状況の登録が行えること() {
+    CourseStatus courseStatus = new CourseStatus(1,"仮申込",100,100);
+
+    sut.registerCourseStatus(courseStatus);
+
+    CourseStatus actual = sut.searchCourseStatus(100);
+    assertThat(actual).isEqualTo(courseStatus);
+  }
+
+  @Test
   void 受講生の更新が行えること() {
     Student actual = sut.searchStudent("1");
     actual.setRemark("更新しました。");

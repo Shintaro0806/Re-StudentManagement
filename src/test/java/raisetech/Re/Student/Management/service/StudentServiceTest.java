@@ -139,6 +139,17 @@ class StudentServiceTest {
   }
 
   @Test
+  void コース申込状況の登録処理をリポジトリーから適切に呼び出せていること() {
+    int testCourseId = 100;
+    CourseStatus courseStatus = new CourseStatus();
+    courseStatus.setCourseId(testCourseId);
+
+    sut.registerCourseStatus(testCourseId);
+
+    verify(repository, times(1)).registerCourseStatus(any(CourseStatus.class));
+  }
+
+  @Test
   void 受講生詳細の更新処理をリポジトリーから適切に呼び出せていること() {
     String id = "123";
     Student student = new Student(id,"江波公史", "エナミコウジ", "エナミ",

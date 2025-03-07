@@ -80,6 +80,11 @@ public class StudentService {
     return studentDetail;
   }
 
+  /**
+   * コース申込状況の登録を行います。コースIDを個別に登録し、申込状況にはデフォルトで申込状況IDと申込状況を設定します。
+   * @param courseId
+   * @return
+   */
   @Transactional
   public CourseStatus registerCourseStatus(int courseId) {
     CourseStatus courseStatus = new CourseStatus();

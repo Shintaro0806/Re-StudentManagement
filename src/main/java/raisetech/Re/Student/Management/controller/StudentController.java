@@ -104,6 +104,12 @@ public class StudentController {
     return ResponseEntity.ok(responseStudentDetail);
   }
 
+  /**
+   * コース申込状況の登録を行います。
+   *
+   * @param courseStatus　コース申込状況
+   * @return　実行結果
+   */
   @PostMapping("/registerCourseStatus")
   public ResponseEntity<CourseStatus> registerCourseStatus(@RequestBody CourseStatus courseStatus) {
     CourseStatus responseCourseStatus = service.registerCourseStatus(courseStatus.getCourseId());

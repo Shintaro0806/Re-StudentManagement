@@ -2,6 +2,7 @@ package raisetech.Re.Student.Management.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -158,6 +160,29 @@ class StudentControllerTest {
         .andExpect(jsonPath("$.student.name").value("大野 林太郎"));
 
     verify(service,times(1)).registerStudent(any());
+  }
+
+  @Test
+  void コース申込状況を登録するとコース申込状況が返ってくること() throws Exception{
+    CourseStatus courseStatus = new CourseStatus();
+    courseStatus.setCourseId(100);
+    courseStatus.setStatus("仮申込");
+
+    String requestBody = """
+        {
+          "courseId": 100
+        }
+        """;
+
+    when(service.registerCourseStatus(anyInt())).thenReturn(courseStatus);
+
+    mockMvc.perform(MockMvcRequestBuilders.post("/registerCourseStatus")
+            .contentType(MediaType.APPLICATION_JSON).content(requestBody))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.courseId").value(100))
+        .andExpect(jsonPath("$.status").value("仮申込"));
+
+    verify(service, times(1)).registerCourseStatus(anyInt());
   }
 
   @Test
