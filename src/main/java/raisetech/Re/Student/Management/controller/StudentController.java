@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import raisetech.Re.Student.Management.data.CourseStatus;
 import raisetech.Re.Student.Management.domain.StudentDetail;
 import raisetech.Re.Student.Management.service.StudentService;
 
@@ -58,6 +60,37 @@ public class StudentController {
   }
 
   /**
+   *  コースの申込状況をコースIDを用いて取得します。
+   *
+   * @param courseId
+   * @return　コース申込状況
+   */
+  @Operation(summary = "コース申込状況", description = "コースIDでコース申込状況を取得します。")
+  @GetMapping("/coursestatus/{courseId}")
+  public CourseStatus courseStatus(@PathVariable int courseId){
+    return service.searchCourseStatus(courseId);
+  }
+
+  /**
+   * 受講生詳細をid,名前,性別,コース名で検索します。また、複数の項目のand条件で検索可能です。
+   *
+   * @param id
+   * @param name
+   * @param sex
+   * @param courseName
+   * @return　受講生詳細
+   */
+  @GetMapping("/students")
+  public List<StudentDetail> getStudents(
+      @RequestParam(required = false) String id,
+      @RequestParam(required = false) String name,
+      @RequestParam(required = false) String sex,
+      @RequestParam(required = false) String courseName,
+      @RequestParam(required = false) String courseId) {
+    return service.searchMultiStudentList(id, name, sex, courseName,courseId);
+  }
+
+  /**
    * 受講生詳細の登録を行います。
    *
    * @param studentDetail 受講生詳細
@@ -72,6 +105,18 @@ public class StudentController {
   }
 
   /**
+   * コース申込状況の登録を行います。
+   *
+   * @param courseStatus　コース申込状況
+   * @return　実行結果
+   */
+  @PostMapping("/registerCourseStatus")
+  public ResponseEntity<CourseStatus> registerCourseStatus(@RequestBody CourseStatus courseStatus) {
+    CourseStatus responseCourseStatus = service.registerCourseStatus(courseStatus.getCourseId());
+    return ResponseEntity.ok(responseCourseStatus);
+  }
+
+  /**
    * 受講生詳細の更新を行います。 キャンセルフラグの更新もここで行います（論理削除）
    *
    * @param studentDetail 受講生詳細
@@ -81,6 +126,18 @@ public class StudentController {
   @PutMapping("/updateStudent")
   public ResponseEntity<String> updateStudent(@RequestBody @Valid StudentDetail studentDetail) {
     service.updateStudent(studentDetail);
+    return ResponseEntity.ok("更新処理が成功しました。");
+  }
+
+  /**
+   * コース申込状況の更新を行います。
+   *
+   * @param courseStatus　コース申し込み状況
+   * @return 実行結果
+   */
+  @PutMapping("/updateCourseStatus")
+  public ResponseEntity<String> updateCourseStatus(@RequestBody @Valid CourseStatus courseStatus) {
+    service.updateCourseStatus(courseStatus);
     return ResponseEntity.ok("更新処理が成功しました。");
   }
 

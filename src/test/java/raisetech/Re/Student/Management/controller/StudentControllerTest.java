@@ -2,11 +2,11 @@ package raisetech.Re.Student.Management.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -15,7 +15,6 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import raisetech.Re.Student.Management.data.CourseStatus;
 import raisetech.Re.Student.Management.data.Student;
 import raisetech.Re.Student.Management.domain.StudentDetail;
 import raisetech.Re.Student.Management.service.Application;
@@ -83,11 +83,45 @@ class StudentControllerTest {
     String id = "123";
     when(service.searchStudent(any(String.class))).thenReturn(null);
 
-
     mockMvc.perform(get("/student/{id}",id))
         .andExpect(status().isOk());
 
     verify(service,times(1)).searchStudent(id);
+  }
+
+  @Test
+  void コースIDに紐づく任意のコースの申込状況を取得できること() throws Exception{
+    int courseId = 123;
+    CourseStatus courseStatus = new CourseStatus(4,"受講終了",courseId,1);
+
+    when(service.searchCourseStatus(courseId)).thenReturn(courseStatus);
+
+    mockMvc.perform(get("/courseStatus/{courseId}",courseId))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.courseId").value(courseId))
+        .andExpect(jsonPath("$.status").value("受講終了"));
+
+    verify(service,times(1)).searchCourseStatus(courseId);
+  }
+
+  @Test
+  void 受講生詳細を複数の条件で検索できること() throws Exception{
+    String id = "1";
+    String name = "山田太郎";
+    String sex = "男性";
+    String courseName = "Javaコース";
+    String courseId = "1";
+    when(service.searchMultiStudentList(id,name,sex,courseName,courseId)).thenReturn(null);
+
+    mockMvc.perform(get("/students")
+            .param("id", id)
+            .param("name", name)
+            .param("sex", sex)
+            .param("courseName", courseName))
+            .andExpect(status().isOk());
+
+    verify(service,times(1)).searchMultiStudentList(id,name,sex,courseName,courseId);
   }
 
   @Test
@@ -128,6 +162,29 @@ class StudentControllerTest {
   }
 
   @Test
+  void コース申込状況を登録するとコース申込状況が返ってくること() throws Exception{
+    CourseStatus courseStatus = new CourseStatus();
+    courseStatus.setCourseId(100);
+    courseStatus.setStatus("仮申込");
+
+    String requestBody = """
+        {
+          "courseId": 100
+        }
+        """;
+
+    when(service.registerCourseStatus(anyInt())).thenReturn(courseStatus);
+
+    mockMvc.perform(MockMvcRequestBuilders.post("/registerCourseStatus")
+            .contentType(MediaType.APPLICATION_JSON).content(requestBody))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.courseId").value(100))
+        .andExpect(jsonPath("$.status").value("仮申込"));
+
+    verify(service, times(1)).registerCourseStatus(anyInt());
+  }
+
+  @Test
   void 受講生情報を更新すると成功メッセージが返ること() throws Exception {
     String requestBody = """
         {
@@ -162,6 +219,26 @@ class StudentControllerTest {
   }
 
   @Test
+  void コース申込状況を更新すると成功メッセージが返ること() throws Exception {
+    String requestBody = """
+        {
+            "courseId": 2,
+            "statusId": 4,
+            "status": "受講終了",
+            "statusKeyId": 2
+        }
+        """;
+
+    mockMvc.perform(MockMvcRequestBuilders.put("/updateCourseStatus")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(requestBody))
+        .andExpect(status().isOk())
+        .andExpect(content().string("更新処理が成功しました。"));
+
+    verify(service, times(1)).updateCourseStatus(any());
+  }
+
+  @Test
   public void 例外をスローしてエラー処理が上手くいくこと() throws Exception {
     when(service.searchStudent(any())).thenThrow(new RuntimeException("このAPIは現在利用できません。古いURLとなっています"));
 
@@ -169,5 +246,4 @@ class StudentControllerTest {
         .andExpect(status().is4xxClientError())
         .andExpect(content().string("このAPIは現在利用できません。古いURLとなっています"));
   }
-
 }

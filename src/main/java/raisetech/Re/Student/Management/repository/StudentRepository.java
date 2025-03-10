@@ -4,8 +4,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import raisetech.Re.Student.Management.data.CourseStatus;
 import raisetech.Re.Student.Management.data.Student;
 import raisetech.Re.Student.Management.data.StudentCourse;
 
@@ -46,8 +48,17 @@ public interface StudentRepository {
    * @param studentId 受講生ID
    * @return 受講生IDに紐づく受講生コース情報
    */
-  @Select("SELECT * FROM students_courses WHERE student_id = #{studentId}")
+  @Select("SELECT * FROM students_courses WHERE id = #{studentId}")
   List<StudentCourse> searchStudentCourse(String studentId);
+
+  /**
+   * コースの申し込み状況を、コースIDを用いて検索します。
+   *
+   * @param courseId
+   * @return　コース申込状況
+   */
+  @Select("SELECT * FROM course_status WHERE course_id  = #{courseId}")
+  CourseStatus searchCourseStatus(int courseId);
 
   /**
    * 受講生を新規登録します。 IDに関しては自動採番を行う。
@@ -71,6 +82,17 @@ public interface StudentRepository {
   void registerStudentCourse(StudentCourse studentCourse);
 
   /**
+   * コース申込状況を新規登録します。status_key_idに関しては自動採番を行う。
+   *
+   * @param courseStatus コース申込状況
+   */
+
+  @Insert("INSERT INTO course_status(status_id, status, course_id) "
+      + "VALUES(1, '仮申込', #{courseId})")
+  @Options(useGeneratedKeys = true, keyProperty = "statusKeyId")
+  void registerCourseStatus(CourseStatus courseStatus);
+
+  /**
    * 受講生を更新します。
    *
    * @param student 受講生
@@ -86,4 +108,40 @@ public interface StudentRepository {
    */
   @Update("UPDATE students_courses SET course_name =#{courseName} WHERE id= #{id}")
   void updateStudentCourse(StudentCourse studentCourse);
+
+  /**
+   * コース申込状況を更新します。
+   *
+   * @param courseStatus　コース申込状況
+   */
+  @Update("UPDATE course_status SET status_id =#{statusId}, status=#{status} WHERE course_id= #{courseId}")
+  void updateCourseStatus(CourseStatus courseStatus);
+
+  /**
+   * 受講生情報を複数の条件で検索します。
+   *
+   * @param id
+   * @param name
+   * @param sex
+   * @param courseName
+   * @param courseId
+   * @return　受講生詳細
+   */
+  @Select("<script>" +
+      "SELECT DISTINCT s.* " +
+      "FROM students s " +
+      "JOIN students_courses sc ON s.id = sc.student_id " +
+      "WHERE 1=1 " +
+      "<if test='id != null and id != \"\"'>AND s.id = #{id} </if>" +
+      "<if test='name != null and name != \"\"'>AND s.name = #{name} </if>" +
+      "<if test='sex != null and sex != \"\"'>AND s.sex = #{sex} </if>" +
+      "<if test='courseName != null and courseName != \"\"'>AND sc.course_name = #{courseName} </if>"
+      +
+      "<if test='courseId != null and courseId != \"\"'>AND sc.course_id = #{courseId} </if>" +
+      "</script>")
+  List<Student> searchByCriteria(@Param("id") String id,
+      @Param("name") String name,
+      @Param("sex") String sex,
+      @Param("courseName") String courseName,
+      @Param("courseId") String courseId);
 }
