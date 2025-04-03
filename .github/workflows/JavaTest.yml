@@ -22,7 +22,7 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    - name: Grant execute permission to Gradle Wrapper  # ✅ 追加
+    - name: Grant execute permission to Gradle Wrapper  
       run: chmod +x ./gradlew
 
     - name: Setup Gradle
@@ -31,4 +31,4 @@ jobs:
           cache: true
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build
+      run: ./gradlew test
