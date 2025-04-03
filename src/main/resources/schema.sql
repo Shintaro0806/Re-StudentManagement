@@ -21,8 +21,10 @@ CREATE TABLE IF NOT EXISTS students_courses
     course_end_at TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS course_status (
+CREATE TABLE IF NOT EXISTS course_status
+(
     status_id INT NOT NULL,
     status VARCHAR(20) NOT NULL,
-    course_id INT NOT NULL
+    course_id INT NOT NULL,
+    status_key_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY
 );

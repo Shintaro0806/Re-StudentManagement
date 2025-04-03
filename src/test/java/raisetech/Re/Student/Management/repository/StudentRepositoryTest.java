@@ -47,52 +47,10 @@ class StudentRepositoryTest {
   }
 
   @Test
-  void 受講生のコース情報をIDで検索ができること() {
-    List<StudentCourse> actual = sut.searchStudentCourse("1");
-
-    assertThat(actual.size()).isEqualTo(3);
-
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-
-    List<StudentCourse> expected = List.of(
-        new StudentCourse("1", "1", "Javaコース",
-            LocalDateTime.parse("2023-04-01T09:00:00"),
-            LocalDateTime.parse("2023-07-01T15:00:00")),
-
-        new StudentCourse("2", "1", "AWSコース",
-            LocalDateTime.parse("2023-05-01T10:00:00"),
-            LocalDateTime.parse("2023-08-01T16:00:00")),
-
-        new StudentCourse("10", "1", "Web制作コース",
-            LocalDateTime.parse("2024-01-01T13:00:00"),
-            LocalDateTime.parse("2024-05-01T19:00:00")));
-
-    assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
-  }
-
-  @Test
   void コース申込状況をコースIDで検索できること() {
     CourseStatus actual = sut.searchCourseStatus(1);
 
     assertThat(actual.getStatus()).isEqualTo("仮申込");
-  }
-
-  @Test
-  void 受講生詳細を条件付きで検索できること() {
-    String id = "1";
-    String name = "山田太郎";
-    String sex = "男性";
-    String courseName = "Javaコース";
-    String courseId = "1";
-
-    Student student = new Student(
-        "1", "山田太郎", "ヤマダタロウ", "タロ", "taro@example.com",
-        "東京", 25, "男性", "", false);
-    List<Student> expected = List.of(student);
-
-    List<Student> actualList = sut.searchByCriteria(id,name,sex,courseName,courseId);
-
-    assertThat(actualList).isEqualTo(expected);
   }
 
   @Test

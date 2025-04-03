@@ -96,7 +96,7 @@ class StudentControllerTest {
 
     when(service.searchCourseStatus(courseId)).thenReturn(courseStatus);
 
-    mockMvc.perform(get("/courseStatus/{courseId}",courseId))
+    mockMvc.perform(get("/coursestatus/{courseId}",courseId))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.courseId").value(courseId))
@@ -118,7 +118,8 @@ class StudentControllerTest {
             .param("id", id)
             .param("name", name)
             .param("sex", sex)
-            .param("courseName", courseName))
+            .param("courseName", courseName)
+            .param("courseId", courseId))
             .andExpect(status().isOk());
 
     verify(service,times(1)).searchMultiStudentList(id,name,sex,courseName,courseId);

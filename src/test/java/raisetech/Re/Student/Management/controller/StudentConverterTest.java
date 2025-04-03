@@ -26,12 +26,8 @@ class StudentConverterTest {
         "1", "山田太郎", "ヤマダタロウ", "タロ", "taro@example.com",
         "東京", 25, "男性", "", false);
 
-    StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setId("1");
-    studentCourse.setStudentId("1");
-    studentCourse.setCourseName("JAVAコース");
-    studentCourse.setCourseStartAt(LocalDateTime.now());
-    studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));
+    StudentCourse studentCourse = new StudentCourse(
+        "1","1","JAVAコース",LocalDateTime.now(),LocalDateTime.now().plusYears(1));
 
     List<Student> studentList = Arrays.asList(student);
     List<StudentCourse> studentCourseList = Arrays.asList(studentCourse);
@@ -48,12 +44,8 @@ class StudentConverterTest {
         "1", "山田太郎", "ヤマダタロウ", "タロ", "taro@example.com",
         "東京", 25, "男性", "", false);
 
-    StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setId("1");
-    studentCourse.setStudentId("2");
-    studentCourse.setCourseName("JAVAコース");
-    studentCourse.setCourseStartAt(LocalDateTime.now());
-    studentCourse.setCourseEndAt(LocalDateTime.now().plusYears(1));
+    StudentCourse studentCourse = new StudentCourse(
+        "1","2","JAVAコース",LocalDateTime.now(),LocalDateTime.now().plusYears(1));
 
     List<Student> studentList = Arrays.asList(student);
     List<StudentCourse> studentCourseList = Arrays.asList(studentCourse);
@@ -62,6 +54,5 @@ class StudentConverterTest {
 
     assertThat(studentDetailList.get(0).getStudent()).isEqualTo(student);
     assertThat(studentDetailList.get(0).getStudentCourseList()).isEmpty();
-
   }
 }
