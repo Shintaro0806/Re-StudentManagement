@@ -9,7 +9,7 @@ on:
 env:
   EC2_USER: 'ec2-user'
   EC2_HOST: '57.180.7.161'
-  SRC_PATH: 'build/libs/*.jar'
+  SRC_PATH: 'build/libs/Re.Student.Management-0.0.1-SNAPSHOT.jar'
   DEST_PATH: '/home/ec2-user/Re-StudentManagement.jar'
 
 jobs:
